@@ -1,0 +1,40 @@
+html,
+body {
+    background: #edf2f7;
+    margin: 0;
+    padding: 0;
+}
+main {
+    flex: 1 0 auto; /* Allows main content to grow and not shrink */
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.content {
+    display: grid;
+    grid-template-columns: 200px auto;
+}
+
+.books {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 0 2em;
+}
+.button-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.filter {
+    margin-bottom: 1rem;
+}
+
+.filter label {
+    margin-right: 0.5rem;
+}
+
+.books {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
