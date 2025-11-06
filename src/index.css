@@ -73,7 +73,8 @@
     overflow: visible;
 }
 
-.bk-price {
+.bk-price,
+.title {
     color: #272932;
     font-weight: 500;
     font-size: 16px;

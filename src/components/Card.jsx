@@ -6,8 +6,10 @@ export default function Book({
     isSelected,
     onSelect,
     onShowDetails,
+    hideDetailsButton = false,
 }) {
     const imageUrl = book.imageUrl || book.image;
+
     return (
         <article
             className={`card ${isLoaned ? "loaned" : ""} ${
@@ -51,14 +53,17 @@ export default function Book({
                     )}
                 </div>
             )}
-            <button
-                className='details-btn'
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onShowDetails?.();
-                }}>
-                View Details
-            </button>
+
+            {!hideDetailsButton && onShowDetails && (
+                <button
+                    className='details-btn'
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onShowDetails();
+                    }}>
+                    View Details
+                </button>
+            )}
         </article>
     );
 }
