@@ -6,8 +6,49 @@ import Header from "./components/Header";
 import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
 import LoanDetails from "./components/LoanDetails";
+import BookDetails from "./components/BookDetails"; // NEW
+import SimilarBooks from "./components/SimilarBooks";
 
 function App() {
+    const [detailBook, setDetailBook] = useState(null); // null → list view
+    const [similar, setSimilar] = useState([]);
+
+    useEffect(() => {
+        if (!detailBook?.author) {
+            setSimilar([]);
+            return;
+        }
+
+        const query = detailBook.author.trim();
+        const apiUrl = `https://api.itbook.store/1.0/search/${encodeURIComponent(
+            query
+        )}`;
+
+        // NEW: More reliable proxy
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(
+            apiUrl
+        )}`;
+
+        console.log("Fetching via allorigins:", proxyUrl); // debug
+
+        fetch(proxyUrl)
+            .then((r) => {
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                return r.json();
+            })
+            .then((data) => {
+                console.log("API success:", data);
+                const filtered = (data.books || []).filter(
+                    (b) => b.title !== detailBook.title
+                );
+                setSimilar(filtered.slice(0, 6));
+            })
+            .catch((err) => {
+                console.error("Fetch failed:", err);
+                setSimilar([]); // Graceful fallback
+            });
+    }, [detailBook]);
+
     const [books, setBooks] = useState(() => {
         const s = localStorage.getItem("books");
         return s ? JSON.parse(s) : [];
@@ -60,6 +101,12 @@ function App() {
                         onReturn={returnBook}
                         onQuit={() => setShowLoanManager(false)}
                     />
+                ) : detailBook ? (
+                    <BookDetails
+                        book={detailBook}
+                        onClose={() => setDetailBook(null)}>
+                        <SimilarBooks books={similar} />
+                    </BookDetails>
                 ) : (
                     <>
                         <div className='toolbar'>
@@ -106,6 +153,9 @@ function App() {
                                                     ? null
                                                     : book.id
                                             )
+                                        }
+                                        onShowDetails={() =>
+                                            setDetailBook(book)
                                         }
                                     />
                                 ))}

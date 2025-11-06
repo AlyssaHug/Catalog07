@@ -5,6 +5,7 @@ export default function Book({
     onReturn,
     isSelected,
     onSelect,
+    onShowDetails,
 }) {
     const imageUrl = book.imageUrl || book.image;
     return (
@@ -50,6 +51,14 @@ export default function Book({
                     )}
                 </div>
             )}
+            <button
+                className='details-btn'
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onShowDetails?.();
+                }}>
+                View Details
+            </button>
         </article>
     );
 }
