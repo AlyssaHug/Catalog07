@@ -6,7 +6,7 @@ export default function BookDetails({ book, onClose, children }) {
             <button
                 className='close-details'
                 onClick={onClose}>
-                × Close
+                Close
             </button>
 
             <div className='details-grid'>
@@ -21,23 +21,23 @@ export default function BookDetails({ book, onClose, children }) {
 
                 <div className='details-info'>
                     <h1>{book.title}</h1>
-                    <p>
+                    <p className='details-item'>
                         <strong>Author:</strong> {book.author || "-"}
                     </p>
-                    <p>
+                    <p className='details-item'>
                         <strong>Publisher:</strong> {book.publisher || "-"}
                     </p>
-                    <p>
+                    <p className='details-item'>
                         <strong>Year:</strong>{" "}
                         {book.publicationYear || book.year || "-"}
                     </p>
-                    <p>
+                    <p className='details-item'>
                         <strong>Pages:</strong> {book.pages || "-"}
                     </p>
-                    <p>
+                    <p className='details-item'>
                         <strong>Language:</strong> {book.language || "-"}
                     </p>
-                    <p>
+                    <p className='details-item'>
                         <strong>Price:</strong>{" "}
                         {book.price ? `$${book.price}` : "-"}
                     </p>
@@ -54,7 +54,6 @@ export default function BookDetails({ book, onClose, children }) {
                 </div>
             </div>
 
-            {/* similar books slot */}
             <div className='similar-section'>{children}</div>
         </section>
     );

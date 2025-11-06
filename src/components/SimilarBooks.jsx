@@ -1,6 +1,12 @@
 import Book from "./Card";
 export default function SimilarBooks({ books }) {
-    if (!books?.length) return <p>No similar books found.</p>;
+    if (!books?.length)
+        return (
+            <div>
+                <h2>Similar Books</h2>
+                <p>No similar books found.</p>
+            </div>
+        );
 
     return (
         <>
