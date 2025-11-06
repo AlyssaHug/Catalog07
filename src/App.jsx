@@ -14,17 +14,20 @@ function App() {
     const [similar, setSimilar] = useState([]);
 
     useEffect(() => {
-        if (!detailBook?.author) {
+        if (!detailBook?.publisher) {
             setSimilar([]);
             return;
         }
 
-        const author = detailBook.author.trim();
-        const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(
-            `https://api.itbook.store/1.0/search/${encodeURIComponent(author)}`
-        )}`;
+        const publisher = detailBook.publisher.trim();
 
-        fetch(url)
+        fetch(
+            `https://api.allorigins.win/raw?url=${encodeURIComponent(
+                `https://api.itbook.store/1.0/search/${encodeURIComponent(
+                    publisher
+                )}`
+            )}`
+        )
             .then((r) => r.json())
             .then((data) => setSimilar((data.books || []).slice(0, 6)))
             .catch(() => setSimilar([]));
