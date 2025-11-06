@@ -19,32 +19,45 @@ function App() {
             return;
         }
 
-        const query = detailBook.author.trim();
+        const author = detailBook.author.trim();
         const apiUrl = `https://api.itbook.store/1.0/search/${encodeURIComponent(
-            query
+            author
         )}`;
-
-        // NEW: More reliable proxy
         const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(
             apiUrl
         )}`;
 
-        console.log("Fetching via allorigins:", proxyUrl); // debug
+        console.log("Fetching:", proxyUrl); // Debug: See the URL
 
         fetch(proxyUrl)
-            .then((r) => {
-                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            .then(async (r) => {
+                // NEW: Log raw status & headers for debugging
+                console.log("Response status:", r.status, r.statusText);
+                console.log("Response headers:", [...r.headers.entries()]);
+
+                if (!r.ok) {
+                    throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+                }
+
+                // NEW: Check content-type before parsing
+                const contentType = r.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    const text = await r.text(); // Get raw text if not JSON
+                    console.error("Non-JSON response:", text.substring(0, 200)); // First 200 chars
+                    throw new Error("Invalid response format (not JSON)");
+                }
+
                 return r.json();
             })
             .then((data) => {
-                console.log("API success:", data);
+                console.log("Parsed data:", data); // Should show { total: "X", books: [...] }
                 const filtered = (data.books || []).filter(
                     (b) => b.title !== detailBook.title
                 );
                 setSimilar(filtered.slice(0, 6));
             })
             .catch((err) => {
-                console.error("Fetch failed:", err);
+                console.error("Full fetch error:", err);
                 setSimilar([]); // Graceful fallback
             });
     }, [detailBook]);
