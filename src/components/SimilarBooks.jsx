@@ -12,7 +12,6 @@ export default function SimilarBooks({ books }) {
                         book={{
                             id: b.isbn13,
                             title: b.title,
-                            author: b.subtitle || "—",
                             image: b.image,
                         }}
                     />
