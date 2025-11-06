@@ -1,5 +1,3 @@
-import Book from "./Card";
-
 export default function SimilarBooks({ books }) {
     if (!books?.length) return <p>No similar books found.</p>;
 
@@ -15,9 +13,7 @@ export default function SimilarBooks({ books }) {
                             title: b.title,
                             author: b.subtitle || "—",
                             image: b.image,
-                            year: b.year,
                         }}
-                        // No loan/selection logic needed here
                     />
                 ))}
             </div>
