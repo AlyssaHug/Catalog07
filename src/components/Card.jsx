@@ -29,7 +29,7 @@ export default function Book({
                     }}
                 />
             ) : null}
-            <h3>{book.title}</h3>
+            <h3 className='title'>{book.title}</h3>
             <p className='author'>{book.author}</p>
             {book.year && <p className='year'>{book.year}</p>}
 
