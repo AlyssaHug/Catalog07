@@ -20,46 +20,14 @@ function App() {
         }
 
         const author = detailBook.author.trim();
-        const apiUrl = `https://api.itbook.store/1.0/search/${encodeURIComponent(
-            author
-        )}`;
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(
-            apiUrl
+        const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(
+            `https://api.itbook.store/1.0/search/${encodeURIComponent(author)}`
         )}`;
 
-        console.log("Fetching:", proxyUrl); // Debug: See the URL
-
-        fetch(proxyUrl)
-            .then(async (r) => {
-                // NEW: Log raw status & headers for debugging
-                console.log("Response status:", r.status, r.statusText);
-                console.log("Response headers:", [...r.headers.entries()]);
-
-                if (!r.ok) {
-                    throw new Error(`HTTP ${r.status}: ${r.statusText}`);
-                }
-
-                // NEW: Check content-type before parsing
-                const contentType = r.headers.get("content-type");
-                if (!contentType || !contentType.includes("application/json")) {
-                    const text = await r.text(); // Get raw text if not JSON
-                    console.error("Non-JSON response:", text.substring(0, 200)); // First 200 chars
-                    throw new Error("Invalid response format (not JSON)");
-                }
-
-                return r.json();
-            })
-            .then((data) => {
-                console.log("Parsed data:", data); // Should show { total: "X", books: [...] }
-                const filtered = (data.books || []).filter(
-                    (b) => b.title !== detailBook.title
-                );
-                setSimilar(filtered.slice(0, 6));
-            })
-            .catch((err) => {
-                console.error("Full fetch error:", err);
-                setSimilar([]); // Graceful fallback
-            });
+        fetch(url)
+            .then((r) => r.json())
+            .then((data) => setSimilar((data.books || []).slice(0, 6)))
+            .catch(() => setSimilar([]));
     }, [detailBook]);
 
     const [books, setBooks] = useState(() => {
